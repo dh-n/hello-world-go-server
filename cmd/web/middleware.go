@@ -9,8 +9,7 @@ import (
 
 func WriteToConsole(next http.Handler) http.Handler{
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request){
-		cookie, _ := r.Cookie("csrf_token")
-		fmt.Println("The message was fetched",cookie )
+		fmt.Println("The message was fetched from", r.RequestURI )
 		next.ServeHTTP(w,r)
 	})
 }
@@ -25,4 +24,8 @@ func NoSurf(next http.Handler)http.Handler{
 		SameSite: http.SameSiteLaxMode,
 	})
 	return csrfHandler
+}
+
+func SessionLoad(next http.Handler) http.Handler{
+	return session.LoadAndSave(next)
 }

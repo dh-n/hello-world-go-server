@@ -26,6 +26,10 @@ func NewHandlers(r *Repository) {
 
 func (m *Repository)Home(w http.ResponseWriter, r *http.Request){
 	// fmt.Fprintf(w, "Hello world")
+
+	remoteIP := r.RemoteAddr
+	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
+
 	stringMap := make(map[string]string)
 	stringMap["test"] = "Hello there from template data - Yeehaw (Top Gun)"
 	render.RenderTemplate(w, "home.page.html", &models.TemplateData{
@@ -36,7 +40,12 @@ func (m *Repository)Home(w http.ResponseWriter, r *http.Request){
 
 func (m *Repository)About(w http.ResponseWriter, r *http.Request){
 	// fmt.Fprintf(w, "Hello world")
-	render.RenderTemplate(w, "about.page.html", &models.TemplateData{})
+	stringMap := make(map[string]string)
+	remoteIP := m.App.Session.GetString(r.Context(), "remote_ip")
+	stringMap["remote_ip"] = remoteIP
+	render.RenderTemplate(w, "about.page.html", &models.TemplateData{
+		StringMap: stringMap,
+	})
 }
 
 

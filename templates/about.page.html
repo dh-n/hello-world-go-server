@@ -12,6 +12,11 @@
         corrupti quidem unde quas at.
       </p>
     </div>
+    {{if ne (index .StringMap "remote_ip") ""}}
+    <h3>Your remote IP address is {{index .StringMap "remote_ip"}}</h3>
+    {{else}}
+    <p>I don't know your address yet please visit <a href="/">Home page</a></p>
+    {{end}}
   </div>
 </div>
 

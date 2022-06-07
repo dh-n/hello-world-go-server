@@ -4,16 +4,31 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/alexedwards/scs/v2"
 	"github.com/dh-n/go-course/pkg/config"
 	"github.com/dh-n/go-course/pkg/handlers"
 	"github.com/dh-n/go-course/pkg/render"
 )
 
 const portNumber = ":3000"
+var app config.AppConfig
+var session *scs.SessionManager
+
 
 func main() {
-	var app config.AppConfig
+	
+
+	app.InProduction = false
+
+	session = scs.New()
+	session.Lifetime = 24 * time.Hour
+	session.Cookie.Persist = true
+	session.Cookie.SameSite = http.SameSiteLaxMode
+	session.Cookie.Secure = app.InProduction
+
+	app.Session = session
 
 	tc,err := render.CacheTemplate()
 	if err != nil {
